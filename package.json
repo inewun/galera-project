@@ -1,0 +1,12 @@
+{
+  "name": "openproject-gantt",
+  "private": true,
+  "scripts": {
+    "install:all": "npm i && cd server && npm i && cd ../client && npm i",
+    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\"",
+    "build": "cd server && npm run build && cd ../client && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

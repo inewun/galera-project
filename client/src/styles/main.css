@@ -1,0 +1,561 @@
+/* === Светлая тема в стиле OpenProject === */
+
+:root {
+  --op-header: #1a67a3;
+  --op-header-text: #ffffff;
+  --op-bg: #f5f6f7;
+  --op-surface: #ffffff;
+  --op-border: #e0e2e4;
+  --op-text: #303a44;
+  --op-text-muted: #6b7682;
+  --op-accent: #1a67a3;
+  --op-accent-hover: #155389;
+  --op-sidebar-active: #e7f0f7;
+  --op-sidebar-active-text: #1a67a3;
+
+  --font-family: 'Lato', system-ui, -apple-system, sans-serif;
+  --font-size: 14px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: var(--op-bg);
+  color: var(--op-text);
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  line-height: 1.5;
+}
+
+/* === Layout === */
+
+.layout {
+  display: flex;
+  height: 100%;
+}
+
+.layout__nav {
+  width: 220px;
+  background: var(--op-header);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.layout__nav-title {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: var(--op-header-text);
+}
+
+.layout__nav-link {
+  color: var(--op-header-text);
+  text-decoration: none;
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  transition: background 0.15s, color 0.15s;
+  opacity: 0.9;
+}
+
+.layout__nav-link:hover {
+  background: var(--op-sidebar-active);
+  color: var(--op-sidebar-active-text);
+  opacity: 1;
+}
+
+.layout__nav-link.active {
+  background: var(--op-sidebar-active);
+  color: var(--op-sidebar-active-text);
+  opacity: 1;
+  border-radius: 4px;
+}
+
+.layout__content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  background: var(--op-bg);
+}
+
+/* === Overview === */
+
+.overview__title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.overview__stats {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.overview__stats li {
+  padding: 0.5rem 0.75rem;
+  background: var(--op-surface);
+  border-radius: 4px;
+  border: 1px solid var(--op-border);
+}
+
+.overview__source {
+  font-style: italic;
+  color: var(--op-text-muted);
+}
+
+/* === Spinner === */
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 120px;
+}
+
+/* === ErrorState === */
+
+.error-state {
+  text-align: center;
+  padding: 2rem;
+}
+
+.error-state__message {
+  color: var(--op-accent);
+  margin-bottom: 1rem;
+}
+
+.error-state__retry {
+  background: var(--op-accent);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: inherit;
+}
+
+.error-state__retry:hover {
+  background: var(--op-accent-hover);
+}
+
+/* === EmptyState === */
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: var(--op-text-muted);
+}
+
+/* === Gantt === */
+
+.gantt-wrap {
+  overflow-x: auto;
+  padding: 0;
+  background: var(--op-surface);
+  border: 1px solid var(--op-border);
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.gantt-view__toolbar {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.gantt-view__select {
+  background: var(--op-surface);
+  color: var(--op-text);
+  border: 1px solid var(--op-border);
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  font-size: inherit;
+}
+
+.gantt-view__view-buttons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.gantt-view__view-btn {
+  background: var(--op-surface);
+  color: var(--op-text-muted);
+  border: 1px solid var(--op-border);
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+
+.gantt-view__view-btn:hover {
+  background: var(--op-sidebar-active);
+  color: var(--op-sidebar-active-text);
+}
+
+.gantt-view__view-btn--active {
+  background: var(--op-accent);
+  color: #fff;
+  border-color: var(--op-accent);
+}
+
+.gantt-view__view-btn--active:hover {
+  background: var(--op-accent-hover);
+  color: #fff;
+}
+
+.gantt-view__hidden-info {
+  margin-top: 1rem;
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--op-text-muted);
+}
+
+/* === Structure Module === */
+
+.structure__title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.structure__toast {
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.structure__toast--error {
+  background: #fde8e8;
+  color: #b71c1c;
+  border: 1px solid #f5c6c6;
+}
+
+.structure__columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.structure__section-title {
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+  color: var(--op-text);
+}
+
+.structure__editor {
+  background: var(--op-surface);
+  border: 1px solid var(--op-border);
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+.structure__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.structure__row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--op-border);
+}
+
+.structure__row:last-child {
+  border-bottom: none;
+}
+
+.structure__row-name {
+  min-width: 160px;
+  font-weight: 500;
+  color: var(--op-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.structure__row-select {
+  flex: 1;
+  min-width: 140px;
+  background: var(--op-bg);
+  color: var(--op-text);
+  border: 1px solid var(--op-border);
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  font-size: inherit;
+}
+
+.structure__row-select:focus {
+  outline: none;
+  border-color: var(--op-accent);
+  box-shadow: 0 0 0 2px rgba(26, 103, 163, 0.2);
+}
+
+/* Tree panel */
+.structure__tree-panel {
+  background: var(--op-surface);
+  border: 1px solid var(--op-border);
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+.structure__empty-tree {
+  color: var(--op-text-muted);
+  font-style: italic;
+}
+
+/* ── Tree ── */
+
+.structure-tree,
+.structure-tree__children {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Каждый дочерний узел сам создаёт отступ и рисует свой коннектор */
+.structure-tree__children > .structure-tree__item {
+  position: relative;
+  padding-left: 18px;
+}
+
+/* Вертикаль слева узла (соединяет с соседями снизу) */
+.structure-tree__children > .structure-tree__item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background: var(--op-border);
+}
+/* У последнего ребёнка вертикаль обрывается на уровне его веточки */
+.structure-tree__children > .structure-tree__item:last-child::before {
+  height: 15px;
+}
+/* Горизонтальная веточка от вертикали к строке узла */
+.structure-tree__children > .structure-tree__item::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 15px;
+  width: 14px;
+  height: 1px;
+  background: var(--op-border);
+}
+
+/* Корневые узлы — без коннекторов */
+.structure-tree > .structure-tree__item {
+  position: relative;
+}
+
+.structure-tree__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  transition: background 0.12s ease;
+}
+.structure-tree__row:hover {
+  background: var(--op-sidebar-active);
+}
+
+.structure-tree__toggle {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--op-text-muted);
+  font-size: 10px;
+  line-height: 1;
+}
+.structure-tree__toggle:hover { color: var(--op-accent); }
+.structure-tree__toggle--spacer { visibility: hidden; }
+
+.structure-tree__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.structure-tree__icon { color: var(--op-accent); flex: none; }
+.structure-tree__name {
+  color: var(--op-text);
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.structure-tree__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex: none;
+  font-size: 11px;
+  color: var(--op-text-muted);
+  background: var(--op-bg);
+  border: 1px solid var(--op-border);
+  border-radius: 10px;
+  padding: 0 6px;
+  line-height: 18px;
+}
+.structure-tree__person-icon { color: var(--op-text-muted); }
+
+/* ── Timeline (текстовый предпросмотр, S3a) ── */
+
+.timeline__wrap {
+  background: var(--op-surface);
+  border: 1px solid var(--op-border);
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+}
+
+.timeline__row--task {
+  opacity: 0.85;
+}
+
+.timeline__task-name {
+  font-size: 12px;
+  color: var(--op-text-muted);
+}
+
+.timeline__date-range {
+  font-size: 11px;
+  color: var(--op-text-muted);
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+.timeline__group-icon {
+  /* reuse same icon styling; no extra icon needed for timeline groups */
+}
+
+.timeline__hidden-info {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--op-text-muted);
+}
+
+/* ── Planner (vis-timeline) ── */
+
+.planner__wrap {
+  background: var(--op-surface);
+  border: 1px solid var(--op-border);
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.planner__toolbar {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--op-border);
+  flex-wrap: wrap;
+}
+
+.planner__toolbar-btn {
+  background: var(--op-surface);
+  color: var(--op-text-muted);
+  border: 1px solid var(--op-border);
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: var(--font-family);
+  transition: background 0.15s, color 0.15s;
+}
+
+.planner__toolbar-btn:hover {
+  background: var(--op-sidebar-active);
+  color: var(--op-sidebar-active-text);
+}
+
+.planner__toolbar-btn--fit {
+  margin-left: auto;
+}
+
+.planner__container {
+  height: 60vh;
+  min-height: 300px;
+  padding: 0.25rem 0;
+}
+
+/* ── vis-timeline overrides ── */
+
+.vis-timeline {
+  border: none;
+  font-family: var(--font-family);
+}
+
+.vis-item.struct-task {
+  background: var(--op-accent);
+  border-color: var(--op-accent-hover);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.vis-item.vis-background.struct-agg {
+  background: rgba(26, 103, 163, 0.08);
+}
+
+.vis-panel.vis-left,
+.vis-panel.vis-center {
+  border-color: var(--op-border);
+}
+
+.vis-labelset .vis-label {
+  border-bottom: 1px solid var(--op-border);
+  color: var(--op-text);
+  font-size: 13px;
+}
+
+.vis-labelset .vis-label .vis-inner {
+  padding: 4px 8px;
+}
+
+.vis-time-axis .vis-text {
+  color: var(--op-text-muted);
+  font-size: 11px;
+}
+
+.vis-time-axis .vis-grid.vis-minor {
+  border-color: var(--op-border);
+}
+
+.vis-time-axis .vis-grid.vis-major {
+  border-color: var(--op-border);
+}
+
+.vis-current-time {
+  background-color: var(--op-accent);
+  opacity: 0.3;
+}
