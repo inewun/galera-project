@@ -6,20 +6,24 @@ export function Layout() {
 
   return (
     <div className="layout">
-      <nav className="layout__nav">
-        <div className="layout__nav-title">OpenProject Gantt</div>
-        <NavLink to="/" end className="layout__nav-link">
-          Обзор
-        </NavLink>
-        {modules.map((m) => (
-          <NavLink key={m.id} to={m.route} className="layout__nav-link">
-            {m.title}
+      <header className="layout__topbar">
+        <div className="layout__brand">OpenProject Gantt</div>
+      </header>
+      <div className="layout__body">
+        <nav className="layout__nav">
+          <NavLink to="/" end className="layout__nav-link">
+            Главная
           </NavLink>
-        ))}
-      </nav>
-      <main className="layout__content">
-        <Outlet />
-      </main>
+          {modules.map((m) => (
+            <NavLink key={m.id} to={m.route} className="layout__nav-link">
+              {m.title}
+            </NavLink>
+          ))}
+        </nav>
+        <main className="layout__content">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }

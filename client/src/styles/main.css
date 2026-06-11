@@ -12,6 +12,8 @@
   --op-accent-hover: #155389;
   --op-sidebar-active: #e7f0f7;
   --op-sidebar-active-text: #1a67a3;
+  --op-topbar: #3f454b;
+  --op-topbar-text: #ffffff;
 
   --font-family: 'Lato', system-ui, -apple-system, sans-serif;
   --font-size: 14px;
@@ -41,11 +43,36 @@ body {
 
 .layout {
   display: flex;
+  flex-direction: column;
   height: 100%;
+}
+
+.layout__topbar {
+  height: 48px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  padding: 0 1.25rem;
+  background: var(--op-topbar);
+  color: var(--op-topbar-text);
+  border-bottom: 1px solid var(--op-border);
+}
+
+.layout__brand {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--op-topbar-text);
+}
+
+.layout__body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
 }
 
 .layout__nav {
   width: 220px;
+  flex: none;
   background: var(--op-header);
   padding: 1rem;
   display: flex;
@@ -84,9 +111,15 @@ body {
 
 .layout__content {
   flex: 1;
+  min-width: 0;
   padding: 2rem;
   overflow-y: auto;
   background: var(--op-bg);
+}
+
+.module-placeholder__title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 /* === Overview === */

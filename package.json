@@ -2,9 +2,11 @@
   "name": "openproject-gantt",
   "private": true,
   "scripts": {
-    "install:all": "npm i && cd server && npm i && cd ../client && npm i",
-    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\"",
-    "build": "cd server && npm run build && cd ../client && npm run build"
+    "install:all": "npm i && cd client && npm i && cd .. && python3 -m venv .venv && .venv/bin/python -m pip install -r server_py/requirements.txt",
+    "dev:server": ".venv/bin/python -m uvicorn app.main:app --app-dir server_py --host 0.0.0.0 --port 4000 --reload",
+    "dev:client": "cd client && npm run dev",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "build": "cd client && npm run build"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

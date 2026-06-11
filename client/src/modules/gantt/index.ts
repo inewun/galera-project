@@ -3,7 +3,7 @@ import { GanttView } from './GanttView';
 
 registerModule({
   id: 'gantt',
-  title: 'Диаграмма Ганта',
+  title: 'Gantt',
   navOrder: 10,
   route: '/gantt',
   Component: GanttView,
