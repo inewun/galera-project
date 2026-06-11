@@ -25,11 +25,34 @@ export interface Group {
   id: string;
   name: string;
   memberIds: string[];
+  createdAt: string | null;
 }
 
 export interface Project {
   id: string;
   name: string;
+}
+
+export type ApprovalStatus = 'pending' | 'approved' | 'rejected';
+
+export interface ApprovalRequestCreate {
+  taskId: string;
+  taskSubject: string;
+  projectId?: string | null;
+  projectName?: string | null;
+  departmentId?: string | null;
+  departmentName?: string | null;
+  groupId?: string | null;
+  groupName?: string | null;
+  currentDue?: string | null;
+  proposedDue?: string | null;
+}
+
+export interface ApprovalRequest extends ApprovalRequestCreate {
+  id: string;
+  status: ApprovalStatus;
+  createdAt: string;
+  decidedAt: string | null;
 }
 
 /** groupId → parent groupId (or null for root groups). */

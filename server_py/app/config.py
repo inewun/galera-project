@@ -45,6 +45,14 @@ class Config:
     write_enabled: bool
     session_secret: str
     node_env: str
+    approvals_source: str
+    op_approval_status_field: str
+    op_approval_status_pending_href: str
+    op_approval_status_approved_href: str
+    op_approval_status_rejected_href: str
+    op_approval_proposed_due_field: str
+    op_approval_previous_due_field: str
+    op_approval_request_id_field: str
 
 
 config = Config(
@@ -56,4 +64,12 @@ config = Config(
     write_enabled=_get_env("WRITE_ENABLED", "false") == "true",
     session_secret=_get_env("SESSION_SECRET", "change_me_later"),
     node_env=_get_env("NODE_ENV", "development"),
+    approvals_source=_get_env("APPROVALS_SOURCE", "local"),
+    op_approval_status_field=_get_env("OP_APPROVAL_STATUS_FIELD", ""),
+    op_approval_status_pending_href=_get_env("OP_APPROVAL_STATUS_PENDING_HREF", ""),
+    op_approval_status_approved_href=_get_env("OP_APPROVAL_STATUS_APPROVED_HREF", ""),
+    op_approval_status_rejected_href=_get_env("OP_APPROVAL_STATUS_REJECTED_HREF", ""),
+    op_approval_proposed_due_field=_get_env("OP_APPROVAL_PROPOSED_DUE_FIELD", ""),
+    op_approval_previous_due_field=_get_env("OP_APPROVAL_PREVIOUS_DUE_FIELD", ""),
+    op_approval_request_id_field=_get_env("OP_APPROVAL_REQUEST_ID_FIELD", ""),
 )

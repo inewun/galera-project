@@ -1,4 +1,13 @@
-import type { Task, User, Group, Project, HierarchyMap } from '../types';
+import type {
+  ApprovalRequest,
+  ApprovalRequestCreate,
+  ApprovalStatus,
+  Task,
+  User,
+  Group,
+  Project,
+  HierarchyMap,
+} from '../types';
 
 export interface ListParams {
   projectId?: string;
@@ -11,6 +20,10 @@ export interface DataSource {
   getProjects(): Promise<Project[]>;
   getHierarchy(): Promise<HierarchyMap>;
   saveHierarchy(map: HierarchyMap): Promise<HierarchyMap>;
+  getApprovalRequests(status?: ApprovalStatus): Promise<ApprovalRequest[]>;
+  createApprovalRequest(data: ApprovalRequestCreate): Promise<ApprovalRequest>;
+  approveApprovalRequest(id: string): Promise<ApprovalRequest>;
+  rejectApprovalRequest(id: string): Promise<ApprovalRequest>;
 
   /** ЗАДЕЛ: обновление задачи */
   updateTask?(id: string, patch: Partial<Task>): Promise<Task>;

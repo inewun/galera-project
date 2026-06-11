@@ -8,6 +8,7 @@ export function Layout() {
     <div className="layout">
       <header className="layout__topbar">
         <div className="layout__brand">OpenProject Gantt</div>
+        <div className="layout__topbar-meta">FastAPI · OpenProject proxy</div>
       </header>
       <div className="layout__body">
         <nav className="layout__nav">

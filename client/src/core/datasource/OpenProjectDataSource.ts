@@ -1,6 +1,15 @@
 import type { DataSource, ListParams } from './DataSource';
 import { NotImplementedError } from './DataSource';
-import type { Task, User, Group, Project, HierarchyMap } from '../types';
+import type {
+  ApprovalRequest,
+  ApprovalRequestCreate,
+  ApprovalStatus,
+  Task,
+  User,
+  Group,
+  Project,
+  HierarchyMap,
+} from '../types';
 import * as http from '../../api/http';
 
 export class OpenProjectDataSource implements DataSource {
@@ -30,6 +39,25 @@ export class OpenProjectDataSource implements DataSource {
 
   async saveHierarchy(map: HierarchyMap): Promise<HierarchyMap> {
     return http.put<HierarchyMap>('/hierarchy', map);
+  }
+
+  async getApprovalRequests(status?: ApprovalStatus): Promise<ApprovalRequest[]> {
+    const path = status
+      ? `/approval-requests?status=${encodeURIComponent(status)}`
+      : '/approval-requests';
+    return http.get<ApprovalRequest[]>(path);
+  }
+
+  async createApprovalRequest(data: ApprovalRequestCreate): Promise<ApprovalRequest> {
+    return http.post<ApprovalRequest>('/approval-requests', data);
+  }
+
+  async approveApprovalRequest(id: string): Promise<ApprovalRequest> {
+    return http.post<ApprovalRequest>(`/approval-requests/${id}/approve`);
+  }
+
+  async rejectApprovalRequest(id: string): Promise<ApprovalRequest> {
+    return http.post<ApprovalRequest>(`/approval-requests/${id}/reject`);
   }
 
   updateTask(_id: string, _patch: Partial<Task>): Promise<Task> {

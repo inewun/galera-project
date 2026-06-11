@@ -62,6 +62,7 @@ def map_group(group: dict[str, Any]) -> Group:
         id=str(group.get("id")),
         name=group.get("name"),
         memberIds=member_ids,
+        createdAt=group.get("createdAt"),
     )
 
 

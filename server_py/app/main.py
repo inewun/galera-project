@@ -7,7 +7,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.config import REPO_ROOT, config
 from app.openproject.client import OpenProjectError
-from app.routes import groups, health, hierarchy, projects, users, work_packages, write_stubs
+from app.routes import approval_requests, groups, health, hierarchy, projects, users, work_packages, write_stubs
 
 
 app = FastAPI(title="OpenProject Gantt API")
@@ -26,6 +26,7 @@ app.include_router(users.router)
 app.include_router(groups.router)
 app.include_router(projects.router)
 app.include_router(hierarchy.router)
+app.include_router(approval_requests.router)
 app.include_router(write_stubs.router)
 
 

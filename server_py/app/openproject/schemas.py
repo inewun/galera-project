@@ -30,6 +30,7 @@ class Group(BaseModel):
     id: str
     name: str
     memberIds: list[str]
+    createdAt: str | None
 
 
 class Project(BaseModel):
