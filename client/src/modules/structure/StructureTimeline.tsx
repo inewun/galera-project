@@ -20,9 +20,10 @@ function ms(dayCount: number): number {
 
 interface StructureTimelineProps {
   result: StructResult;
+  onTaskSelect?: (taskId: string) => void;
 }
 
-export function StructureTimeline({ result }: StructureTimelineProps) {
+export function StructureTimeline({ result, onTaskSelect }: StructureTimelineProps) {
   const { roots, hiddenNoDateCount } = result;
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -87,7 +88,13 @@ export function StructureTimeline({ result }: StructureTimelineProps) {
     }
 
     // Drill-down: клик по группе → фокус на её agg-периоде
-    timeline.on('click', (props: { group?: string }) => {
+    timeline.on('click', (props: { group?: string; item?: string }) => {
+      if (props.item?.startsWith('t:')) {
+        const taskId = props.item.slice(2).split('@')[0];
+        onTaskSelect?.(taskId);
+        return;
+      }
+
       if (!props.group) return;
       const aggItem = data.items.find(
         (it) => it.id === 'agg:' + props.group,
@@ -105,7 +112,7 @@ export function StructureTimeline({ result }: StructureTimelineProps) {
       timeline.destroy();
       timelineRef.current = null;
     };
-  }, [result, roots.length]);
+  }, [onTaskSelect, result, roots.length]);
 
   /* ── Обработчики тулбара ── */
 

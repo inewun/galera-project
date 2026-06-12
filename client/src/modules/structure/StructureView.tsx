@@ -1,21 +1,15 @@
-import { useEffect, useState, useCallback, useMemo } from 'react';
-import type { Group, User, Task, HierarchyMap } from '../../core/types';
+import { useEffect, useState, useCallback } from 'react';
+import type { Group, HierarchyMap } from '../../core/types';
 import { dataSource } from '../../core/datasource';
 import { Spinner } from '../../components/Spinner';
 import { ErrorState } from '../../components/ErrorState';
 import { EmptyState } from '../../components/EmptyState';
 import { buildTree, wouldCreateCycle } from './tree';
 import type { TreeNode } from './tree';
-import { buildStructureData } from './data';
-import type { StructResult } from './data';
-import { StructureTimeline } from './StructureTimeline';
-
 type PageState =
   | { status: 'loading' }
   | { status: 'error'; message: string }
-  | { status: 'loaded'; groups: Group[]; users: User[]; tasks: Task[]; hierarchy: HierarchyMap };
-
-type ViewMode = 'editor' | 'timeline';
+  | { status: 'loaded'; groups: Group[]; hierarchy: HierarchyMap };
 
 interface TableRow {
   group: Group;
@@ -64,19 +58,16 @@ export function StructureView() {
   const [state, setState] = useState<PageState>({ status: 'loading' });
   const [hierarchy, setHierarchy] = useState<HierarchyMap>({});
   const [saveError, setSaveError] = useState<string | null>(null);
-  const [view, setView] = useState<ViewMode>('editor');
 
   const load = useCallback(async () => {
     setState({ status: 'loading' });
     try {
-      const [groups, loadedHierarchy, users, tasks] = await Promise.all([
+      const [groups, loadedHierarchy] = await Promise.all([
         dataSource.getGroups(),
         dataSource.getHierarchy(),
-        dataSource.getUsers(),
-        dataSource.getTasks(),
       ]);
       setHierarchy(loadedHierarchy);
-      setState({ status: 'loaded', groups, hierarchy: loadedHierarchy, users, tasks });
+      setState({ status: 'loaded', groups, hierarchy: loadedHierarchy });
     } catch (err) {
       setState({
         status: 'error',
@@ -113,12 +104,6 @@ export function StructureView() {
       setSaveError((err as Error).message || 'Ошибка сохранения иерархии');
     }
   };
-
-  const timelineResult: StructResult | undefined = useMemo(() => {
-    if (state.status !== 'loaded') return undefined;
-    const { groups, hierarchy, users, tasks } = state;
-    return buildStructureData(groups, hierarchy, users, tasks);
-  }, [state]);
 
   if (state.status === 'loading') {
     return <Spinner />;
@@ -158,45 +143,14 @@ export function StructureView() {
         </div>
       )}
 
-      <div className="gantt-view__toolbar">
-        <div className="gantt-view__view-buttons">
-          <button
-            className={
-              'gantt-view__view-btn' +
-              (view === 'editor' ? ' gantt-view__view-btn--active' : '')
-            }
-            onClick={() => setView('editor')}
-          >
-            Редактор
-          </button>
-          <button
-            className={
-              'gantt-view__view-btn' +
-              (view === 'timeline' ? ' gantt-view__view-btn--active' : '')
-            }
-            onClick={() => setView('timeline')}
-          >
-            Таймлайн
-          </button>
-        </div>
-      </div>
-
-      {view === 'editor' ? (
-        <StructureTable
-          rows={tableRows}
-          groups={groups}
-          hierarchy={hierarchy}
-          rootGroups={rootGroups}
-          childrenByParent={childrenByParent}
-          onParentChange={handleParentChange}
-        />
-      ) : (
-        timelineResult ? (
-          <StructureTimeline result={timelineResult} />
-        ) : (
-          <Spinner />
-        )
-      )}
+      <StructureTable
+        rows={tableRows}
+        groups={groups}
+        hierarchy={hierarchy}
+        rootGroups={rootGroups}
+        childrenByParent={childrenByParent}
+        onParentChange={handleParentChange}
+      />
     </div>
   );
 }

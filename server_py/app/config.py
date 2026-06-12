@@ -47,12 +47,16 @@ class Config:
     node_env: str
     approvals_source: str
     op_approval_status_field: str
+    op_approval_status_none_href: str
     op_approval_status_pending_href: str
     op_approval_status_approved_href: str
     op_approval_status_rejected_href: str
     op_approval_proposed_due_field: str
-    op_approval_previous_due_field: str
-    op_approval_request_id_field: str
+    op_approval_comment_field: str
+    op_approval_requested_at_field: str
+    op_approval_requested_by_field: str
+    op_approval_decided_at_field: str
+    op_approval_decided_by_field: str
 
 
 config = Config(
@@ -66,10 +70,14 @@ config = Config(
     node_env=_get_env("NODE_ENV", "development"),
     approvals_source=_get_env("APPROVALS_SOURCE", "local"),
     op_approval_status_field=_get_env("OP_APPROVAL_STATUS_FIELD", ""),
+    op_approval_status_none_href=_get_env("OP_APPROVAL_STATUS_NONE_HREF", ""),
     op_approval_status_pending_href=_get_env("OP_APPROVAL_STATUS_PENDING_HREF", ""),
     op_approval_status_approved_href=_get_env("OP_APPROVAL_STATUS_APPROVED_HREF", ""),
     op_approval_status_rejected_href=_get_env("OP_APPROVAL_STATUS_REJECTED_HREF", ""),
     op_approval_proposed_due_field=_get_env("OP_APPROVAL_PROPOSED_DUE_FIELD", ""),
-    op_approval_previous_due_field=_get_env("OP_APPROVAL_PREVIOUS_DUE_FIELD", ""),
-    op_approval_request_id_field=_get_env("OP_APPROVAL_REQUEST_ID_FIELD", ""),
+    op_approval_comment_field=_get_env("OP_APPROVAL_COMMENT_FIELD", ""),
+    op_approval_requested_at_field=_get_env("OP_APPROVAL_REQUESTED_AT_FIELD", ""),
+    op_approval_requested_by_field=_get_env("OP_APPROVAL_REQUESTED_BY_FIELD", ""),
+    op_approval_decided_at_field=_get_env("OP_APPROVAL_DECIDED_AT_FIELD", ""),
+    op_approval_decided_by_field=_get_env("OP_APPROVAL_DECIDED_BY_FIELD", ""),
 )

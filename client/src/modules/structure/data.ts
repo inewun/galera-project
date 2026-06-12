@@ -49,11 +49,13 @@ function clamp(n: number, min: number, max: number): number {
 export function buildStructureData(
   groups: Group[],
   hierarchy: HierarchyMap,
-  _users: User[],
+  users: User[],
   tasks: Task[],
 ): StructResult {
   const groupMap = new Map<string, Group>();
   for (const g of groups) groupMap.set(g.id, g);
+  const taskMap = new Map(tasks.map((task) => [task.id, task]));
+  const userNameById = new Map(users.map((user) => [user.id, user.name]));
 
   const groupTree = buildTree(groups, hierarchy);
 
@@ -70,8 +72,8 @@ export function buildStructureData(
   }
   groupTree.forEach(collectDesc);
 
-  /* -- Собираем привязку: groupId -> множество taskId -- */
-  const groupTaskIds = new Map<string, Set<string>>();
+  const directGroupTaskIds = new Map<string, Set<string>>();
+  const userTaskIdsByGroup = new Map<string, Map<string, Set<string>>>();
 
   // Группы → memberIds → userIds
   const userIdsInGroups = new Map<string, Set<string>>();
@@ -81,11 +83,9 @@ export function buildStructureData(
 
   for (const t of tasks) {
     if (t.assigneeType === 'group' && t.assigneeId !== null && groupMap.has(t.assigneeId)) {
-      // Своя задача группы
-      if (!groupTaskIds.has(t.assigneeId)) groupTaskIds.set(t.assigneeId, new Set());
-      groupTaskIds.get(t.assigneeId)!.add(t.id);
+      if (!directGroupTaskIds.has(t.assigneeId)) directGroupTaskIds.set(t.assigneeId, new Set());
+      directGroupTaskIds.get(t.assigneeId)!.add(t.id);
     } else if (t.assigneeType === 'user' && t.assigneeId !== null) {
-      // Задача пользователя — показываем только в самой глубокой группе членства
       const memberGroups: string[] = [];
       for (const [gid, uids] of userIdsInGroups) {
         if (uids.has(t.assigneeId)) memberGroups.push(gid);
@@ -97,8 +97,10 @@ export function buildStructureData(
         return !memberGroups.some((other) => other !== gid && desc.has(other));
       });
       for (const gid of effective) {
-        if (!groupTaskIds.has(gid)) groupTaskIds.set(gid, new Set());
-        groupTaskIds.get(gid)!.add(t.id);
+        if (!userTaskIdsByGroup.has(gid)) userTaskIdsByGroup.set(gid, new Map());
+        const userTaskIds = userTaskIdsByGroup.get(gid)!;
+        if (!userTaskIds.has(t.assigneeId)) userTaskIds.set(t.assigneeId, new Set());
+        userTaskIds.get(t.assigneeId)!.add(t.id);
       }
     }
   }
@@ -107,7 +109,6 @@ export function buildStructureData(
   const hiddenNoDateIds = new Set<string>();
   for (const t of tasks) {
     if (isDated(t)) continue;
-    // Проверяем, привязалась бы эта задача
     if (t.assigneeType === 'group' && t.assigneeId !== null && groupMap.has(t.assigneeId)) {
       hiddenNoDateIds.add(t.id);
     } else if (t.assigneeType === 'user' && t.assigneeId !== null) {
@@ -124,21 +125,14 @@ export function buildStructureData(
     }
   }
 
-  /* -- Рекурсивный convert -- */
-  function convert(groupNode: TreeNode): StructNode {
-    const g = groupMap.get(groupNode.id)!;
-
-    // Задачи-листья этой группы (датированные)
-    const taskNodes: StructNode[] = [];
-    const assigned = groupTaskIds.get(groupNode.id);
-    if (assigned) {
-      for (const tid of assigned) {
-        const t = tasks.find((x) => x.id === tid);
-        if (!t) continue;
-        if (!isDated(t)) continue;
+  function buildTaskNodes(taskIds: Set<string>, ownerId: string): StructNode[] {
+    return [...taskIds]
+      .map((tid): StructNode | null => {
+        const t = taskMap.get(tid);
+        if (!t || !isDated(t)) return null;
         const { s, e } = taskRange(t);
-        taskNodes.push({
-          id: 't:' + t.id + '@' + groupNode.id,
+        return {
+          id: 't:' + t.id + '@' + ownerId,
           kind: 'task',
           name: t.subject,
           start: s,
@@ -146,34 +140,85 @@ export function buildStructureData(
           progress: clamp(t.progress ?? 0, 0, 100),
           taskCount: 1,
           children: [],
-        });
-      }
-    }
+        };
+      })
+      .filter((node): node is StructNode => node !== null)
+      .sort((a, b) => (a.start?.getTime() ?? 0) - (b.start?.getTime() ?? 0));
+  }
 
-    const childGroups = groupNode.children.map(convert);
-    const children = [...childGroups, ...taskNodes];
-
-    // Вычисляем диапазон дат
+  function aggregateNode(
+    id: string,
+    name: string,
+    children: StructNode[],
+    memberCount?: number,
+  ): StructNode {
     let minStart: Date | null = null;
     let maxEnd: Date | null = null;
-    for (const c of children) {
-      if (c.start !== null && (minStart === null || c.start < minStart)) minStart = c.start;
-      if (c.end !== null && (maxEnd === null || c.end > maxEnd)) maxEnd = c.end;
+    for (const child of children) {
+      if (child.start !== null && (minStart === null || child.start < minStart)) minStart = child.start;
+      if (child.end !== null && (maxEnd === null || child.end > maxEnd)) maxEnd = child.end;
     }
 
-    const taskCount = childGroups.reduce((sum, ch) => sum + ch.taskCount, 0) + taskNodes.length;
-
     return {
-      id: 'g:' + groupNode.id,
+      id,
       kind: 'group',
-      name: g.name,
+      name,
       start: minStart,
       end: maxEnd,
       progress: 0,
-      taskCount,
-      memberCount: g.memberIds.length,
+      taskCount: children.reduce((sum, child) => sum + child.taskCount, 0),
+      memberCount,
       children,
     };
+  }
+
+  /* -- Рекурсивный convert -- */
+  function convert(groupNode: TreeNode): StructNode {
+    const g = groupMap.get(groupNode.id)!;
+
+    const childGroups = groupNode.children.map(convert);
+    const directTaskNodes = buildTaskNodes(
+      directGroupTaskIds.get(groupNode.id) ?? new Set(),
+      `${groupNode.id}:direct`,
+    );
+    const directTaskBucket = directTaskNodes.length > 0
+      ? aggregateNode(`g:${groupNode.id}:direct`, 'Задачи отдела', directTaskNodes)
+      : null;
+
+    const userTaskNodes = [...(userTaskIdsByGroup.get(groupNode.id) ?? new Map()).entries()]
+      .map(([userId, taskIds]) => {
+        const taskNodes = buildTaskNodes(taskIds, `${groupNode.id}:user:${userId}`);
+        if (taskNodes.length === 0) return null;
+        return aggregateNode(
+          `g:${groupNode.id}:user:${userId}`,
+          userNameById.get(userId) ?? `Сотрудник #${userId}`,
+          taskNodes,
+        );
+      })
+      .filter((node): node is StructNode => node !== null)
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    const children = [
+      ...childGroups,
+      ...(directTaskBucket ? [directTaskBucket] : []),
+      ...userTaskNodes,
+    ];
+
+    if (children.length === 0) {
+      return {
+        id: 'g:' + groupNode.id,
+        kind: 'group',
+        name: g.name,
+        start: null,
+        end: null,
+        progress: 0,
+        taskCount: 0,
+        memberCount: g.memberIds.length,
+        children: [],
+      };
+    }
+
+    return aggregateNode('g:' + groupNode.id, g.name, children, g.memberIds.length);
   }
 
   const roots = groupTree.map(convert);

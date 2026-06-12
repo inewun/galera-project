@@ -64,7 +64,7 @@ export function Overview() {
   const departmentsWithChildren = departments.filter((group) =>
     data.groups.some((candidate) => data.hierarchy[candidate.id] === group.id),
   );
-  const units = data.groups.filter((group) => data.hierarchy[group.id] !== null);
+  const units = data.groups.filter((group) => data.hierarchy[group.id] != null);
 
   return (
     <div className="overview">
