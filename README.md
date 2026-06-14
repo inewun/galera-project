@@ -34,8 +34,9 @@ AUTH_ENABLED=false
 WRITE_ENABLED=false
 SESSION_SECRET=change_me_later
 APPROVALS_SOURCE=op
-Для согласования через OpenProject custom fields заполнить OP_APPROVAL_* в .env.
 ```
+Для согласования через OpenProject custom fields заполнить OP_APPROVAL_* в .env.
+
 
 ## Runtime-данные
 Папка data/, в ней создаются и используются:
