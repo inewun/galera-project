@@ -68,9 +68,15 @@ docker compose build galera-gantt
 ```
 
 # Команда Galera2006
-Дмитрий Никитин - **teamlead** & architect & docs
-Артём Фадеев - **db** & backend & docs
-Геннадий Братчиков - **backend**
+
+Дмитрий Никитин - **teamlead** & architect & docs & ideas
+
+Геннадий Братчиков - **backend** & ideas
+
+Артём Фадеев - **db** & backend & docs & ideas
+
 Карим Ненахов - **speaker** & backend
+
 Ростислав Никонов - **QA** & docs
+
 Кирилл Попов - **frontend**
