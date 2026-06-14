@@ -160,7 +160,6 @@ def _map_wp(
     project = links.get("project") or {}
     proposed_due = wp.get(config.op_approval_proposed_due_field)
     created_at = wp.get(config.op_approval_requested_at_field) or wp.get("createdAt") or ""
-    decided_at = wp.get(config.op_approval_decided_at_field)
     comment = _text_value(wp.get(config.op_approval_comment_field))
     org_fields = _org_fields_from_wp(wp, groups, hierarchy)
 
@@ -179,7 +178,7 @@ def _map_wp(
         comment=comment,
         status=status,
         createdAt=created_at,
-        decidedAt=decided_at if isinstance(decided_at, str) else None,
+        decidedAt=None,
     )
 
 

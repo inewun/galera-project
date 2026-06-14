@@ -34,9 +34,21 @@ AUTH_ENABLED=false
 WRITE_ENABLED=false
 SESSION_SECRET=change_me_later
 APPROVALS_SOURCE=op
+
+OP_APPROVAL_STATUS_FIELD=customField1
+OP_APPROVAL_STATUS_NONE_HREF=/api/v3/custom_options/1
+OP_APPROVAL_STATUS_PENDING_HREF=/api/v3/custom_options/2
+OP_APPROVAL_STATUS_APPROVED_HREF=/api/v3/custom_options/3
+OP_APPROVAL_STATUS_REJECTED_HREF=/api/v3/custom_options/4
+OP_APPROVAL_PROPOSED_DUE_FIELD=customField3
+OP_APPROVAL_COMMENT_FIELD=customField4
+OP_APPROVAL_REQUESTED_AT_FIELD=customField5
+OP_APPROVAL_REQUESTED_BY_FIELD=customField6
 ```
 
-Если используется согласование через custom fields OpenProject, также заполнить все `OP_APPROVAL_*` поля в `.env`.
+Для реального согласования переносов должно быть `WRITE_ENABLED=true`. При `WRITE_ENABLED=false` Galera Gantt только читает заявки из OpenProject и не меняет даты задач.
+
+Если на сервере уже занят порт `4000`, поменять левую часть проброса в `docker-compose.yml`, например `4010:4000`.
 
 ## 2. Подготовить данные
 

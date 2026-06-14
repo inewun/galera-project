@@ -55,8 +55,6 @@ class Config:
     op_approval_comment_field: str
     op_approval_requested_at_field: str
     op_approval_requested_by_field: str
-    op_approval_decided_at_field: str
-    op_approval_decided_by_field: str
 
 
 config = Config(
@@ -78,6 +76,4 @@ config = Config(
     op_approval_comment_field=_get_env("OP_APPROVAL_COMMENT_FIELD", ""),
     op_approval_requested_at_field=_get_env("OP_APPROVAL_REQUESTED_AT_FIELD", ""),
     op_approval_requested_by_field=_get_env("OP_APPROVAL_REQUESTED_BY_FIELD", ""),
-    op_approval_decided_at_field=_get_env("OP_APPROVAL_DECIDED_AT_FIELD", ""),
-    op_approval_decided_by_field=_get_env("OP_APPROVAL_DECIDED_BY_FIELD", ""),
 )
