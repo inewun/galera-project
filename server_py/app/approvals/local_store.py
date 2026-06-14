@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Literal
 from uuid import uuid4
 
-from app.approvals.schemas import ApprovalRequest, ApprovalRequestCreate, ApprovalStatus
+from app.approvals.schemas import ApprovalDecision, ApprovalRequest, ApprovalRequestCreate, ApprovalStatus
 from app.config import REPO_ROOT
 
 
@@ -51,7 +51,11 @@ async def create_approval_request(data: ApprovalRequestCreate) -> ApprovalReques
     return request
 
 
-async def decide_approval_request(request_id: str, status: Literal["approved", "rejected"]) -> ApprovalRequest | None:
+async def decide_approval_request(
+    request_id: str,
+    status: Literal["approved", "rejected"],
+    decision: ApprovalDecision | None = None,
+) -> ApprovalRequest | None:
     items = _read_raw()
     for index, item in enumerate(items):
         if item.get("id") != request_id:

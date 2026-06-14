@@ -1,5 +1,9 @@
 import type {
   ApprovalRequest,
+  ApprovalArchiveDeleteResult,
+  ApprovalArchiveParams,
+  ApprovalArchiveResponse,
+  ApprovalDecision,
   ApprovalRequestCreate,
   ApprovalStatus,
   Task,
@@ -21,9 +25,12 @@ export interface DataSource {
   getHierarchy(): Promise<HierarchyMap>;
   saveHierarchy(map: HierarchyMap): Promise<HierarchyMap>;
   getApprovalRequests(status?: ApprovalStatus): Promise<ApprovalRequest[]>;
+  getApprovalArchive(params?: ApprovalArchiveParams): Promise<ApprovalArchiveResponse>;
   createApprovalRequest(data: ApprovalRequestCreate): Promise<ApprovalRequest>;
-  approveApprovalRequest(id: string): Promise<ApprovalRequest>;
-  rejectApprovalRequest(id: string): Promise<ApprovalRequest>;
+  approveApprovalRequest(id: string, decision?: ApprovalDecision): Promise<ApprovalRequest>;
+  rejectApprovalRequest(id: string, decision?: ApprovalDecision): Promise<ApprovalRequest>;
+  deleteApprovalArchiveItem(id: string): Promise<ApprovalArchiveDeleteResult>;
+  pruneApprovalArchive(unit: 'month' | 'year', count: number): Promise<ApprovalArchiveDeleteResult>;
 
   /** ЗАДЕЛ: обновление задачи */
   updateTask?(id: string, patch: Partial<Task>): Promise<Task>;

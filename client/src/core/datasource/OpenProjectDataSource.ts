@@ -2,6 +2,10 @@ import type { DataSource, ListParams } from './DataSource';
 import { NotImplementedError } from './DataSource';
 import type {
   ApprovalRequest,
+  ApprovalArchiveDeleteResult,
+  ApprovalArchiveParams,
+  ApprovalArchiveResponse,
+  ApprovalDecision,
   ApprovalRequestCreate,
   ApprovalStatus,
   Task,
@@ -48,16 +52,39 @@ export class OpenProjectDataSource implements DataSource {
     return http.get<ApprovalRequest[]>(path);
   }
 
+  async getApprovalArchive(params?: ApprovalArchiveParams): Promise<ApprovalArchiveResponse> {
+    const search = new URLSearchParams();
+    if (params?.year) search.set('year', String(params.year));
+    if (params?.month) search.set('month', String(params.month));
+    if (params?.groupBy) search.set('groupBy', params.groupBy);
+    if (params?.status) search.set('status', params.status);
+    if (params?.projectId) search.set('projectId', params.projectId);
+    if (params?.departmentId) search.set('departmentId', params.departmentId);
+    if (params?.groupId) search.set('groupId', params.groupId);
+    const query = search.toString();
+    return http.get<ApprovalArchiveResponse>(`/approval-requests/archive${query ? `?${query}` : ''}`);
+  }
+
   async createApprovalRequest(data: ApprovalRequestCreate): Promise<ApprovalRequest> {
     return http.post<ApprovalRequest>('/approval-requests', data);
   }
 
-  async approveApprovalRequest(id: string): Promise<ApprovalRequest> {
-    return http.post<ApprovalRequest>(`/approval-requests/${id}/approve`);
+  async approveApprovalRequest(id: string, decision?: ApprovalDecision): Promise<ApprovalRequest> {
+    return http.post<ApprovalRequest>(`/approval-requests/${id}/approve`, decision ?? {});
   }
 
-  async rejectApprovalRequest(id: string): Promise<ApprovalRequest> {
-    return http.post<ApprovalRequest>(`/approval-requests/${id}/reject`);
+  async rejectApprovalRequest(id: string, decision?: ApprovalDecision): Promise<ApprovalRequest> {
+    return http.post<ApprovalRequest>(`/approval-requests/${id}/reject`, decision ?? {});
+  }
+
+  async deleteApprovalArchiveItem(id: string): Promise<ApprovalArchiveDeleteResult> {
+    return http.del<ApprovalArchiveDeleteResult>(`/approval-requests/archive/${id}`);
+  }
+
+  async pruneApprovalArchive(unit: 'month' | 'year', count: number): Promise<ApprovalArchiveDeleteResult> {
+    return http.del<ApprovalArchiveDeleteResult>(
+      `/approval-requests/archive?olderThanUnit=${encodeURIComponent(unit)}&olderThanCount=${encodeURIComponent(String(count))}`,
+    );
   }
 
   updateTask(_id: string, _patch: Partial<Task>): Promise<Task> {

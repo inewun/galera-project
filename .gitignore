@@ -2,6 +2,7 @@ node_modules
 dist
 .env
 .env.save
+data/approval_archive.sqlite3
 *.local
 .DS_Store
 __pycache__/

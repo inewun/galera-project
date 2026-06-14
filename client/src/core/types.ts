@@ -46,6 +46,7 @@ export interface ApprovalRequestCreate {
   groupName?: string | null;
   currentDue?: string | null;
   proposedDue?: string | null;
+  comment?: string | null;
 }
 
 export interface ApprovalRequest extends ApprovalRequestCreate {
@@ -53,6 +54,49 @@ export interface ApprovalRequest extends ApprovalRequestCreate {
   status: ApprovalStatus;
   createdAt: string;
   decidedAt: string | null;
+}
+
+export interface ApprovalDecision {
+  comment?: string | null;
+}
+
+export interface ApprovalArchiveItem extends ApprovalRequest {
+  decidedBy: string | null;
+  decisionComment: string | null;
+}
+
+export type ApprovalArchiveGroupBy = 'all' | 'project' | 'department' | 'group';
+
+export interface ApprovalArchiveSummaryItem {
+  key: string;
+  label: string;
+  total: number;
+  approved: number;
+  rejected: number;
+  averageShiftDays: number | null;
+}
+
+export interface ApprovalArchiveResponse {
+  items: ApprovalArchiveItem[];
+  total: number;
+  approved: number;
+  rejected: number;
+  averageShiftDays: number | null;
+  summary: ApprovalArchiveSummaryItem[];
+}
+
+export interface ApprovalArchiveParams {
+  year?: number;
+  month?: number;
+  groupBy?: ApprovalArchiveGroupBy;
+  status?: Exclude<ApprovalStatus, 'pending'>;
+  projectId?: string;
+  departmentId?: string;
+  groupId?: string;
+}
+
+export interface ApprovalArchiveDeleteResult {
+  deleted: number;
 }
 
 /** groupId → parent groupId (or null for root groups). */

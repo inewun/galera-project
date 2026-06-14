@@ -40,3 +40,16 @@ export async function post<T>(path: string, body?: unknown): Promise<T> {
 
   return res.json() as Promise<T>;
 }
+
+export async function del<T>(path: string): Promise<T> {
+  const res = await fetch(`${BASE}${path}`, {
+    method: 'DELETE',
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`${res.status} ${res.statusText}: ${text}`);
+  }
+
+  return res.json() as Promise<T>;
+}

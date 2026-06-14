@@ -1,0 +1,17 @@
+.git
+.agents
+.codex
+.venv
+node_modules
+client/node_modules
+client/dist
+__pycache__
+*.pyc
+.pytest_cache
+.env
+.env.*
+data
+*.local
+.DS_Store
+gantt_ui_clean.patch
+ТехЗадание_Galera2006.docx

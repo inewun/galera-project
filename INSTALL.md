@@ -84,3 +84,13 @@ npm run build
 ```bash
 NODE_ENV=production .venv/bin/python -m uvicorn app.main:app --app-dir server_py --host 0.0.0.0 --port 4000
 ```
+
+## Docker
+
+Для контейнерного запуска используйте:
+
+```bash
+docker compose up -d --build
+```
+
+Подробная инструкция: [`DOCKER.md`](DOCKER.md).
