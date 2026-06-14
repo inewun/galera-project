@@ -26,14 +26,14 @@ docker compose up -d --build
 ## Настройка .env
 Минимально нужны:
 ``` bash
-OP_BASE_URL=https://op.example.ru     # Ваш сайт или ip
-OP_API_KEY=your_openproject_api_key   # Ключ из OP Администратора
-PORT=4000 
-CLIENT_ORIGIN=http://localhost:4000
-AUTH_ENABLED=false
-WRITE_ENABLED=false
-SESSION_SECRET=change_me_later
-APPROVALS_SOURCE=op
+OP_BASE_URL=https://op.example.ru     # Адрес OpenProject, откуда backend берёт задачи, пользователей, группы и проекты
+OP_API_KEY=your_openproject_api_key   # API-ключ пользователя OpenProject. Через него Galera Gantt читает данные OP и, если разрешено, пишет изменения согласований.
+PORT=4000                             # Порт, на котором запускается FastAP
+CLIENT_ORIGIN=http://localhost:4000   # Origin фронтенда для CORS. Можно поставить домен, например https://galera-gantt.ru
+AUTH_ENABLED=false                    # Заглушка для авторазации
+WRITE_ENABLED=false                   # Разрешает backend писать изменения в OpenProject
+SESSION_SECRET=change_me_later        # Заглушка для авторазации
+APPROVALS_SOURCE=op                    
 ```
 Для согласования через OpenProject custom fields заполнить OP_APPROVAL_* в .env.
 
