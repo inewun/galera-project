@@ -16,7 +16,7 @@ Galera Gantt - веб-интерфейс для просмотра задач Op
 
 ## Быстрый запуск через Docker
 ``` bash
-git clone <repo-url> galera-gantt
+git clone https://github.com/inewun/galera-project galera-gantt
 cd galera-gantt
 cp .env.example .env
 mkdir -p data
