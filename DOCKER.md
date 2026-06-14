@@ -56,7 +56,10 @@ OP_APPROVAL_REQUESTED_BY_FIELD=customField6
 
 ```bash
 mkdir -p data
+sudo chown -R 100:101 data
 ```
+
+Контейнер пишет в эту папку пользователем `galera` с UID `100` и GID `101`. Без `chown` сохранение структуры и архива согласований может падать с `Permission denied`.
 
 Если переносите существующий production, сохранить туда:
 

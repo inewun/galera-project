@@ -20,6 +20,7 @@ git clone https://github.com/inewun/galera-project galera-gantt
 cd galera-gantt
 cp .env.example .env
 mkdir -p data
+sudo chown -R 100:101 data
 docker compose up -d --build
 ```
 
@@ -84,6 +85,10 @@ curl -u "apikey:${OP_API_KEY}" "${OP_BASE_URL}/api/v3/work_packages/schemas/PROJ
 data/hierarchy.json
 data/approval_requests.json
 data/approval_archive.sqlite3
+```
+В Docker контейнер пишет в `data/` пользователем `galera` с UID `100` и GID `101`. После создания папки на Linux-хосте нужно дать ей эти права:
+```bash
+sudo chown -R 100:101 data
 ```
 Для backup сохранять:
 ``` bash
