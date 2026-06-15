@@ -57,6 +57,24 @@ async def op_patch(path: str, body: dict[str, Any]) -> dict[str, Any]:
     return response.json()
 
 
+async def op_post(path: str, body: dict[str, Any]) -> dict[str, Any]:
+    url = f"{config.op_base_url}{path}"
+    headers = {**_default_headers(), "Content-Type": "application/json"}
+    try:
+        async with httpx.AsyncClient(headers=headers, timeout=30.0) as client:
+            response = await client.post(url, json=body)
+    except httpx.HTTPError as exc:
+        raise OpenProjectError(f"OpenProject API error: POST {path} - {exc}") from exc
+
+    if not 200 <= response.status_code < 300:
+        raise OpenProjectError(
+            f"OpenProject API error: POST {path} - "
+            f"{response.status_code} {response.reason_phrase}\n{response.text}"
+        )
+
+    return response.json()
+
+
 async def get_collection(path: str, query: dict[str, str | int] | None = None) -> list[dict[str, Any]]:
     all_elements: list[dict[str, Any]] = []
     page_size = 100

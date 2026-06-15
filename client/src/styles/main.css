@@ -555,6 +555,200 @@ textarea {
   border-top: 1px solid var(--op-divider);
 }
 
+/* === Jira Import === */
+
+.jira {
+  min-width: 0;
+  width: 100%;
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+}
+
+.jira .page-header {
+  margin-bottom: 0;
+  padding-bottom: 0.4rem;
+}
+
+.jira__panel {
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+  padding: 0.75rem;
+  border: 1px solid var(--op-border);
+  border-radius: var(--op-radius-md);
+  background: var(--op-surface);
+  box-shadow: var(--op-shadow-sm);
+}
+
+.jira__panel--source {
+  gap: 0.55rem;
+  padding: 0.625rem 0.75rem;
+}
+
+.jira__panel--task {
+  gap: 0.6rem;
+}
+
+.jira__section-title {
+  color: var(--op-text);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.jira__mode-switch {
+  width: fit-content;
+  display: inline-flex;
+  align-self: start;
+  border: 1px solid var(--op-border);
+  border-radius: var(--op-radius-md);
+  overflow: hidden;
+  background: var(--op-surface);
+}
+
+.jira__mode-switch .planning__mode-btn {
+  min-height: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.75rem;
+}
+
+.jira__grid {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.jira__grid--dates {
+  align-items: start;
+}
+
+.jira__grid--dates .planning__control {
+  grid-template-rows: auto 32px auto;
+}
+
+.jira__grid--dates .jira__field-note {
+  min-height: 1rem;
+}
+
+.jira__input,
+.jira__textarea {
+  width: 100%;
+  border: 1px solid var(--op-border);
+  border-radius: 2px;
+  padding: 0.45rem 0.55rem;
+  color: var(--op-text);
+  background: var(--op-surface);
+  font-size: 0.875rem;
+}
+
+.jira__input {
+  min-height: 32px;
+}
+
+.jira__textarea {
+  min-height: 180px;
+  resize: vertical;
+  line-height: 1.45;
+}
+
+.jira__input:focus,
+.jira__textarea:focus {
+  outline: none;
+  border-color: var(--op-accent);
+}
+
+.jira__field-note {
+  color: var(--op-text-muted);
+  font-size: 0.75rem;
+}
+
+.jira__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.jira__preview {
+  display: grid;
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--op-divider);
+}
+
+.jira__issue-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.jira__issue-meta a,
+.jira__issue-meta span {
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.5rem;
+  border: 1px solid var(--op-border);
+  border-radius: 2px;
+  background: var(--op-surface-2);
+  color: var(--op-text);
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+
+.jira__issue-meta a {
+  color: var(--op-accent-strong);
+  font-weight: 600;
+}
+
+.jira__due-compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
+  gap: 0.5rem;
+  padding: 0.625rem;
+  border: 1px solid var(--op-border);
+  border-radius: var(--op-radius-md);
+  background: var(--op-surface-2);
+}
+
+.jira__due-card {
+  display: grid;
+  gap: 0.2rem;
+  min-height: 58px;
+  padding: 0.5rem 0.625rem;
+  border: 1px solid var(--op-divider);
+  border-radius: 2px;
+  background: var(--op-surface);
+}
+
+.jira__due-card span {
+  color: var(--op-text-muted);
+  font-size: 0.76rem;
+}
+
+.jira__due-card strong {
+  color: var(--op-text);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.jira__approval-warning {
+  grid-column: 1 / -1;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #e0a336;
+  border-radius: 2px;
+  background: #fff6df;
+  color: #7a4d00;
+  font-weight: 600;
+}
+
+.jira__due-compare--warning .jira__due-card {
+  border-color: #e0a336;
+}
+
 /* === Planning Horizons === */
 
 .planning {

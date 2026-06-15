@@ -8,9 +8,17 @@ import type {
   ApprovalDecision,
   ApprovalRequestCreate,
   ApprovalStatus,
+  JiraAuthPayload,
+  JiraImportPayload,
+  JiraImportResult,
+  JiraIssuePreview,
+  JiraUpdatePayload,
+  JiraUpdateResult,
+  OpenProjectAssignee,
   Task,
   User,
   Group,
+  OpenProjectType,
   Project,
   HierarchyMap,
 } from '../types';
@@ -85,6 +93,31 @@ export class OpenProjectDataSource implements DataSource {
     return http.del<ApprovalArchiveDeleteResult>(
       `/approval-requests/archive?olderThanUnit=${encodeURIComponent(unit)}&olderThanCount=${encodeURIComponent(String(count))}`,
     );
+  }
+
+  async previewJiraIssue(data: JiraAuthPayload): Promise<JiraIssuePreview> {
+    return http.post<JiraIssuePreview>('/jira/preview', data);
+  }
+
+  async getOpenProjectTypes(projectId: string): Promise<OpenProjectType[]> {
+    return http.get<OpenProjectType[]>(`/jira/openproject/projects/${encodeURIComponent(projectId)}/types`);
+  }
+
+  async getOpenProjectAssignees(projectId: string, typeId?: string): Promise<OpenProjectAssignee[]> {
+    const search = new URLSearchParams();
+    if (typeId) search.set('typeId', typeId);
+    const query = search.toString();
+    return http.get<OpenProjectAssignee[]>(
+      `/jira/openproject/projects/${encodeURIComponent(projectId)}/assignees${query ? `?${query}` : ''}`,
+    );
+  }
+
+  async importJiraIssue(data: JiraImportPayload): Promise<JiraImportResult> {
+    return http.post<JiraImportResult>('/jira/import', data);
+  }
+
+  async updateOpenProjectFromJira(data: JiraUpdatePayload): Promise<JiraUpdateResult> {
+    return http.post<JiraUpdateResult>('/jira/update-openproject', data);
   }
 
   updateTask(_id: string, _patch: Partial<Task>): Promise<Task> {

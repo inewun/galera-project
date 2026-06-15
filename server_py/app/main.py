@@ -1,4 +1,6 @@
+import json
 from pathlib import Path
+from typing import Any
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,7 +9,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.config import REPO_ROOT, config
 from app.openproject.client import OpenProjectError
-from app.routes import approval_requests, groups, health, hierarchy, projects, users, work_packages, write_stubs
+from app.routes import approval_requests, groups, health, hierarchy, jira_import, projects, users, work_packages, write_stubs
 
 
 app = FastAPI(title="OpenProject Gantt API")
@@ -27,14 +29,45 @@ app.include_router(groups.router)
 app.include_router(projects.router)
 app.include_router(hierarchy.router)
 app.include_router(approval_requests.router)
+if config.jira_enabled:
+    app.include_router(jira_import.router)
 app.include_router(write_stubs.router)
+
+
+def _collect_openproject_messages(value: Any) -> list[str]:
+    if not isinstance(value, dict):
+        return []
+
+    nested_errors = value.get("_embedded", {}).get("errors", [])
+    nested_messages: list[str] = []
+    if isinstance(nested_errors, list):
+        for error in nested_errors:
+            nested_messages.extend(_collect_openproject_messages(error))
+
+    message = value.get("message")
+    direct_messages = [message] if isinstance(message, str) and message.strip() else []
+    return nested_messages + direct_messages
+
+
+def _openproject_error_message(error: str) -> str:
+    json_start = error.find("{")
+    if json_start == -1:
+        return error
+
+    try:
+        payload = json.loads(error[json_start:])
+    except json.JSONDecodeError:
+        return error
+
+    messages = list(dict.fromkeys(message.strip() for message in _collect_openproject_messages(payload) if message.strip()))
+    return " ".join(messages) if messages else error
 
 
 @app.exception_handler(OpenProjectError)
 async def openproject_error_handler(_request: Request, exc: OpenProjectError) -> JSONResponse:
     return JSONResponse(
         status_code=502,
-        content={"error": "OpenProject API error", "detail": str(exc)},
+        content={"error": "OpenProject API error", "message": _openproject_error_message(str(exc)), "detail": str(exc)},
     )
 
 

@@ -1,7 +1,9 @@
 node_modules
 dist
 .env
+.env.dev
 .env.save
+data-dev/
 data/approval_archive.sqlite3
 data/approval_requests.json
 data/hierarchy.json

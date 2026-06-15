@@ -45,6 +45,7 @@ class Config:
     write_enabled: bool
     session_secret: str
     node_env: str
+    jira_enabled: bool
     approvals_source: str
     op_approval_status_field: str
     op_approval_status_none_href: str
@@ -66,6 +67,7 @@ config = Config(
     write_enabled=_get_env("WRITE_ENABLED", "false") == "true",
     session_secret=_get_env("SESSION_SECRET", "change_me_later"),
     node_env=_get_env("NODE_ENV", "development"),
+    jira_enabled=_get_env("JIRA_ENABLED", "false") == "true",
     approvals_source=_get_env("APPROVALS_SOURCE", "local"),
     op_approval_status_field=_get_env("OP_APPROVAL_STATUS_FIELD", ""),
     op_approval_status_none_href=_get_env("OP_APPROVAL_STATUS_NONE_HREF", ""),

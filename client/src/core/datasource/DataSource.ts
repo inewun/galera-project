@@ -6,9 +6,17 @@ import type {
   ApprovalDecision,
   ApprovalRequestCreate,
   ApprovalStatus,
+  JiraAuthPayload,
+  JiraImportPayload,
+  JiraImportResult,
+  JiraIssuePreview,
+  JiraUpdatePayload,
+  JiraUpdateResult,
+  OpenProjectAssignee,
   Task,
   User,
   Group,
+  OpenProjectType,
   Project,
   HierarchyMap,
 } from '../types';
@@ -31,6 +39,11 @@ export interface DataSource {
   rejectApprovalRequest(id: string, decision?: ApprovalDecision): Promise<ApprovalRequest>;
   deleteApprovalArchiveItem(id: string): Promise<ApprovalArchiveDeleteResult>;
   pruneApprovalArchive(unit: 'month' | 'year', count: number): Promise<ApprovalArchiveDeleteResult>;
+  previewJiraIssue(data: JiraAuthPayload): Promise<JiraIssuePreview>;
+  getOpenProjectTypes(projectId: string): Promise<OpenProjectType[]>;
+  getOpenProjectAssignees(projectId: string, typeId?: string): Promise<OpenProjectAssignee[]>;
+  importJiraIssue(data: JiraImportPayload): Promise<JiraImportResult>;
+  updateOpenProjectFromJira(data: JiraUpdatePayload): Promise<JiraUpdateResult>;
 
   /** ЗАДЕЛ: обновление задачи */
   updateTask?(id: string, patch: Partial<Task>): Promise<Task>;

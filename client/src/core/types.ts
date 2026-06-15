@@ -33,6 +33,70 @@ export interface Project {
   name: string;
 }
 
+export interface OpenProjectType {
+  id: string;
+  name: string;
+  isMilestone: boolean;
+}
+
+export interface OpenProjectAssignee {
+  id: string;
+  name: string;
+  href: string;
+  assigneeType: 'user' | 'group' | 'placeholder';
+}
+
+export interface JiraAuthPayload {
+  issueUrl: string;
+  apiToken: string;
+  email?: string | null;
+}
+
+export interface JiraIssuePreview {
+  key: string;
+  url: string;
+  subject: string;
+  description: string;
+  issueType: string | null;
+  status: string | null;
+  priority: string | null;
+  assignee: string | null;
+  reporter: string | null;
+  startDate: string | null;
+  dueDate: string | null;
+}
+
+export interface JiraImportPayload extends JiraAuthPayload {
+  projectId: string;
+  typeId: string;
+  assigneeHref?: string | null;
+  subject: string;
+  description?: string | null;
+  startDate?: string | null;
+  dueDate?: string | null;
+}
+
+export interface JiraImportResult {
+  issue: JiraIssuePreview;
+  task: Task;
+}
+
+export interface JiraUpdatePayload extends JiraAuthPayload {
+  workPackageId: string;
+  subject: string;
+  description?: string | null;
+  startDate?: string | null;
+  dueDate?: string | null;
+  assigneeHref?: string | null;
+}
+
+export interface JiraUpdateResult {
+  issue: JiraIssuePreview;
+  task: Task;
+  dueChanged: boolean;
+  approvalRequest: ApprovalRequest | null;
+}
+
 export type ApprovalStatus = 'pending' | 'approved' | 'rejected';
 
 export interface ApprovalRequestCreate {

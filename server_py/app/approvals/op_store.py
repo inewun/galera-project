@@ -259,7 +259,7 @@ async def create_approval_request(data: ApprovalRequestCreate) -> ApprovalReques
             config.op_approval_proposed_due_field: data.proposedDue,
             config.op_approval_comment_field: {"raw": ""},
             config.op_approval_requested_at_field: _today(),
-            config.op_approval_requested_by_field: "Galera Gantt",
+            config.op_approval_requested_by_field: None,
         },
     )
     updated = await _patch_work_package(data.taskId, patch)

@@ -1,6 +1,8 @@
 FROM node:20-bookworm-slim AS client-builder
 
 WORKDIR /app/client
+ARG VITE_ENABLE_JIRA=false
+ENV VITE_ENABLE_JIRA=${VITE_ENABLE_JIRA}
 
 COPY client/package*.json ./
 RUN npm ci
