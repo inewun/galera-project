@@ -29,8 +29,7 @@ app.include_router(groups.router)
 app.include_router(projects.router)
 app.include_router(hierarchy.router)
 app.include_router(approval_requests.router)
-if config.jira_enabled:
-    app.include_router(jira_import.router)
+app.include_router(jira_import.router)
 app.include_router(write_stubs.router)
 
 

@@ -3,8 +3,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        VITE_ENABLE_JIRA: "true"
     image: galera-gantt-dev:latest
     container_name: galera-gantt-dev
     restart: unless-stopped
@@ -12,7 +10,6 @@ services:
       - .env.dev
     environment:
       NODE_ENV: production
-      JIRA_ENABLED: "true"
       PORT: 4000
     ports:
       - "127.0.0.1:4010:4000"
